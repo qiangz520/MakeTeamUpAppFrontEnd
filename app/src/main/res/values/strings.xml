@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">TeamUp</string>
+    <string name="study_content">你可以找一个小哥哥教你高数、找一个计算机大神教你编程、找一个同校考研的研友、找一个人一起做毕业设计…</string>
+    <string name="competition_content">创新学分不够的小伙伴可以来这里组队哟！找一个会喊666的人；找一个擅长演讲的人；找一个数学专业的大神去数学建模…</string>
+    <string name="outsides_content">找个人一起去骑行、爬山、跑马拉松…</string>
+    <string name="sports_content">健身小白可以来这里找一个健身大咖带带你；夏天要来了，也要体测了，有人晚上一起跑步吗；爱打球的小伙伴可以找个球友</string>
+    <string name="groupbook_content">有人一起去……的吗；组团回家了；团购优惠拼个团；找人一起去做社会实践</string>
+    <string name="funtime_content">你可以召集一些小伙伴一起来玩桌游：有人来玩狼人杀吗</string>
+    <string name="title_activity_add_team">发布组队活动</string>
+    <string name="study">学习</string>
+    <string name="competition">竞赛</string>
+    <string name="funtime">娱乐</string>
+    <string name="sports">运动</string>
+    <string name="outsides">户外</string>
+    <string name="groupbook">拼团</string>
+    <string name="login">登录</string>
+    <string name="click_to_reg"><u>还没有账号？点击注册</u></string>
+    <string name="find_pwd">忘记密码？立即找回</string>
+    <string name="person_info">个人信息</string>
+    <string name="nick_name">Breeze</string>
+    <string name="sex">男</string>
+    <string name="school">杭州电子科技大学</string>
+    <string name="contact_method">1357977299</string>
+    <string name="moreInfo"></string>
+    <string name="reg">注册</string>
+    <string name="my_team">我的团队</string>
+    <string name="history_join">参与记录</string>
+    <string name="system_message">系统消息</string>
+    <string name="my_like_">我的关注</string>
+</resources>

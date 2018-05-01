@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#75a0e4</color>
+    <color name="colorPrimaryDark">#82dbdb</color>
+    <color name="colorAccent">#bbd0cd</color>
+    <color name="log_button">#899ee3</color>
+    <color name="blackWord">#121212</color>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/personal_info"
+            android:icon="@drawable/ic_person"
+            android:title="个人信息"/>
+        <item
+            android:id="@+id/groups"
+            android:icon="@drawable/ic_groups"
+            android:title="我的团队"/>
+        <item
+            android:id="@+id/finished"
+            android:icon="@drawable/ic_finished"
+            android:title="参与记录"/>
+        <item
+            android:id="@+id/notifications"
+            android:icon="@drawable/ic_notifications"
+            android:title="系统消息"/>
+        <item
+            android:id="@+id/my_like_"
+            android:icon="@drawable/ic_like_untouched"
+            android:title="我的关注"/>
+        <item
+            android:id="@+id/user_login"
+            android:icon="@drawable/ic_log"
+            android:title="我的账号"/>
+    </group>
+</menu>

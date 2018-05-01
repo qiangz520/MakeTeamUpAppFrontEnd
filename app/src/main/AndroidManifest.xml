@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.qiang.maketeamapp">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".KindActivity"
+            android:theme="@style/KindActivityTheme" />
+        <activity
+            android:name=".navActivity.PersonInfo"
+            android:label="@string/person_info" />
+        <activity
+            android:name=".navActivity.MyTeam"
+            android:label="@string/my_team" />
+        <activity
+            android:name=".navActivity.HistoryJoin"
+            android:label="@string/history_join" />
+        <activity
+            android:name=".navActivity.SystemMessage"
+            android:label="@string/system_message" />
+        <activity
+            android:name=".AddTeam"
+            android:label="@string/title_activity_add_team"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".navActivity.LogActivity"
+            android:label="@string/login" />
+        <activity
+            android:name=".RegActivity"
+            android:label="@string/reg" />
+        <activity
+            android:name=".navActivity.MyLike"
+            android:label="@string/my_like_">
+        </activity>
+    </application>
+
+</manifest>
