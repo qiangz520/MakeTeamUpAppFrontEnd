@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this,"You clicked search",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.interest:
-                Toast.makeText(this,"You clicked interest",Toast.LENGTH_SHORT).show();
+                Intent intent_interest=new Intent(MainActivity.this,MyInterests.class);
+                startActivity(intent_interest);
                 break;
             case R.id.settings:
                 Toast.makeText(this,"You clicked settings",Toast.LENGTH_SHORT).show();

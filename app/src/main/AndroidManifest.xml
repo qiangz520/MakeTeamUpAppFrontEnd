@@ -46,6 +46,10 @@
             android:name=".navActivity.MyLike"
             android:label="@string/my_like_">
         </activity>
+        <activity
+            android:name=".MyInterests"
+            android:label="@string/my_interests">
+        </activity>
     </application>
 
 </manifest>

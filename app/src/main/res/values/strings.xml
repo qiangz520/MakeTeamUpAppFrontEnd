@@ -27,4 +27,5 @@
     <string name="history_join">参与记录</string>
     <string name="system_message">系统消息</string>
     <string name="my_like_">我的关注</string>
+    <string name="my_interests">我的兴趣</string>
 </resources>
