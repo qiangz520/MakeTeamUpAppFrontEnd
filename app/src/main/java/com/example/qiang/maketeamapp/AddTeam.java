@@ -3,6 +3,7 @@ package com.example.qiang.maketeamapp;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -180,7 +181,8 @@ public class AddTeam extends AppCompatActivity{
                                 Snackbar.make(view, "正在发布", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show(); //暂未显示
 
-                                finish();
+                                Intent intent_issue_finished=new Intent(AddTeam.this, MainActivity.class);
+                                startActivity(intent_issue_finished);
                             }
                         }).show();
             }
