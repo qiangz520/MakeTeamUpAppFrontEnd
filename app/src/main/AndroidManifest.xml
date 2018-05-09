@@ -2,18 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.qiang.maketeamapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">·
+            android:label="@string/app_name">
+            ·
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,14 +49,14 @@
             android:label="@string/reg" />
         <activity
             android:name=".navActivity.MyLike"
-            android:label="@string/my_like_">
-        </activity>
+            android:label="@string/my_like_" />
         <activity
             android:name=".MyInterests"
-            android:label="@string/my_interests">
-        </activity>
+            android:label="@string/my_interests" />
+        <activity
+            android:name=".LogsuccessActivity"
+            android:label="已登录"></activity>
+        <activity android:name=".SearchActivity"></activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
 </manifest>

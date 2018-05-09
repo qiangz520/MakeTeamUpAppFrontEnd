@@ -1,11 +1,13 @@
 package com.example.qiang.maketeamapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.qiang.maketeamapp.navActivity.HistoryJoin;
@@ -132,7 +135,27 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.search:
-                Toast.makeText(this,"You clicked search",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"You clicked search",Toast.LENGTH_SHORT).show();
+                final EditText et = new EditText(this);
+                new AlertDialog.Builder(this).setTitle("搜索")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setView(et)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String input = et.getText().toString();
+                                if (input.equals("")) {
+                                    Toast.makeText(getApplicationContext(), "搜索内容不能为空！" + input, Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Intent intent_to_search = new Intent();
+                                    intent_to_search.putExtra("content", input);
+                                    intent_to_search.setClass(MainActivity.this, SearchActivity.class);
+                                    startActivity(intent_to_search);
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
                 break;
             case R.id.interest:
                 Intent intent_interest=new Intent(MainActivity.this,MyInterests.class);
