@@ -26,7 +26,7 @@
         <LinearLayout
             android:id="@+id/account_pwd_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="#FFF">
             <LinearLayout
@@ -99,6 +99,23 @@
                     android:textColorHint="#77000000"
                     android:layout_weight="1" />
             </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFF">
+                <CheckBox
+                    android:id="@+id/remember_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/remember_pwd"
+                    android:textColor="@color/blackWord"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -146,16 +163,16 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
         </RelativeLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-            <TextView
-                android:id="@+id/log_tv_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blackWord"/>
-        </LinearLayout>
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/white">-->
+            <!--<TextView-->
+                <!--android:id="@+id/log_tv_result"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="@color/blackWord"/>-->
+        <!--</LinearLayout>-->
     </android.support.design.widget.AppBarLayout>
 
 

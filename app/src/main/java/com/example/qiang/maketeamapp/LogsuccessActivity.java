@@ -1,6 +1,7 @@
 package com.example.qiang.maketeamapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ public class LogsuccessActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                SharedPreferences.Editor editor=getSharedPreferences("Token",MODE_PRIVATE).edit();
+                editor.putString("Token","");
+                editor.apply();
                 Intent intent_log_out=new Intent(LogsuccessActivity.this, LogActivity.class);
                 startActivity(intent_log_out);
             }

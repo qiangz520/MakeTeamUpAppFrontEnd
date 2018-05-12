@@ -57,7 +57,9 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"/>
+
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/nickName_layout"
                     android:layout_width="match_parent"

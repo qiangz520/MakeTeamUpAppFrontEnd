@@ -1,11 +1,11 @@
 package com.example.qiang.maketeamapp.navActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +25,14 @@ import com.example.qiang.maketeamapp.R;
 import com.example.qiang.maketeamapp.RegActivity;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.HashMap;
 
-import HttpTool.HttpCallbackListener;
+import javax.security.auth.login.LoginException;
+
 import HttpTool.HttpUtil;
 import classes.Constant;
-import classes.LoginState;
-import classes.MyAsyncTask;
+import classes.LogRegState;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -44,21 +43,47 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
     private TextView tv_reg;
     private EditText edt_log_account;
     private EditText edt_log_pwd;
-    private TextView tv_log_result;
     private String loginResponseStr;
 
-    Handler mHandler = new Handler(){
+    private CheckBox rememberPwd;
+    private SharedPreferences pref_remember;
+    private SharedPreferences.Editor editor;//保存Token 以及实现记住密码功能
+    private String account,password;
+    private boolean isRemember;
+
+    Handler mHandler_log = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            String result = "";
-//            System.out.println("zengq"+msg.obj.toString());
             loginResponseStr=msg.obj.toString();
             Gson gson = new Gson();
-            LoginState loginState=gson.fromJson(loginResponseStr,LoginState.class);
+            LogRegState loginState=gson.fromJson(loginResponseStr, LogRegState.class);
             Toast.makeText(LogActivity.this, loginState.getMsg(), Toast.LENGTH_SHORT).show();
-//            Log.d("zengq", "onClick: "+loginState.getCode());
             if(loginState.getCode().equals("200")) {
+                //登录成功，用SharedPreferesbao保存Token值维持登录状态。
+                editor=getSharedPreferences("Token",MODE_PRIVATE).edit();
+                editor.putString("Token",loginState.getToken());
+                editor.apply();
+//                System.out.println("Token:"+loginState.getToken() );
+                SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+                String token=pref.getString("Token","");
+                Log.e("LogActivity:", "Token is: "+token);
+
+                //登录成功则记住密码
+                editor=pref_remember.edit();
+                account=edt_log_account.getText().toString();
+                password=edt_log_pwd.getText().toString();
+                if(rememberPwd.isChecked()){
+                    editor.putBoolean("remember_password",true);
+                    editor.putString("account",account);
+                    editor.putString("password",password);
+//                    Log.e("Remember", "account:"+account);
+//                    Log.e("Remember","password:"+password);
+                }else{
+                    editor.clear();
+                }
+                editor.apply();
+
                 Intent intent_log_success =new Intent(LogActivity.this, LogsuccessActivity.class);
                 startActivity(intent_log_success);
             }
@@ -79,11 +104,21 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
         tv_reg.setOnClickListener(this);
 
         Button buttonLog=(Button)findViewById(R.id.log_button);
-
         edt_log_account=(EditText)findViewById(R.id.edt_login_account);
         edt_log_pwd=(EditText)findViewById(R.id.edt_login_pwd);
-        tv_log_result=(TextView)findViewById(R.id.log_tv_result);
 
+        rememberPwd=(CheckBox)findViewById(R.id.remember_pwd);
+
+        pref_remember= PreferenceManager.getDefaultSharedPreferences(this);
+        isRemember = pref_remember.getBoolean("remember_password",false);
+        if(isRemember){
+            account= pref_remember.getString("account","");
+            password= pref_remember.getString("password","");
+            edt_log_account.setText(account);
+            edt_log_pwd.setText(password);
+            rememberPwd.setChecked(true);
+
+        }
 
 
         buttonLog.setOnClickListener(new View.OnClickListener(){
@@ -92,18 +127,15 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
                 login();
             }
         });
-
-
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch(item.getItemId()){
             case android.R.id.home:
-                finish();
+                Intent intent = new Intent(LogActivity.this, MainActivity.class);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,7 +176,7 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
                         String responseData = response.body().string();
                         Message message = new Message();
                         message.obj = responseData;
-                        mHandler.sendMessage(message);
+                        mHandler_log.sendMessage(message);
                     }
                 });
 
@@ -155,7 +187,7 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private boolean isInputValid() {
-        //检查用户输入的合法性，这里暂且默认用户输入合法
+        //检查用户输入的合法性
         if(!isEmpty(edt_log_account.getText().toString())&&!isEmpty(edt_log_pwd.getText().toString())) {
             Log.e("zengq","账号密码都不空");
             return true;

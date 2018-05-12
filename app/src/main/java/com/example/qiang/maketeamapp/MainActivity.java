@@ -2,6 +2,7 @@ package com.example.qiang.maketeamapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -81,8 +82,17 @@ public class MainActivity extends AppCompatActivity {
                        startActivity(intent5);
                        break;
                    case R.id.user_login:
-                       Intent intent6=new Intent(MainActivity.this,LogActivity.class);
-                       startActivity(intent6);
+                       Intent intent6;
+                       SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+                       String token=pref.getString("Token","");
+                       if(token.equals("")) {
+                           intent6 = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent6);
+                       }
+                       else{
+                           intent6=new Intent(MainActivity.this,LogsuccessActivity.class);
+                           startActivity(intent6);
+                       }
                        break;
                    default:
                }

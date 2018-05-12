@@ -4,7 +4,7 @@ package classes;
  * Created by qiang on 2018/5/10.
  */
 
-public class LoginState {
+public class LogRegState {
     private String code,msg,Token;
     public String getCode(){
         return code;
