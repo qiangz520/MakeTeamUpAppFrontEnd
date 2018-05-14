@@ -3,19 +3,18 @@ package com.example.qiang.maketeamapp.navActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.qiang.maketeamapp.R;
-import com.example.qiang.maketeamapp.Team_kind;
+import bean.Team_kind;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import classes.LikeKindAdapter;
+import adapters.LikeKindAdapter;
 
 public class MyLike extends AppCompatActivity {
     private List<Team_kind> likeList=new ArrayList<>();

@@ -28,11 +28,9 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.HashMap;
 
-import javax.security.auth.login.LoginException;
-
 import HttpTool.HttpUtil;
 import classes.Constant;
-import classes.LogRegState;
+import bean.ResponseState;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -57,7 +55,7 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
             super.handleMessage(msg);
             loginResponseStr=msg.obj.toString();
             Gson gson = new Gson();
-            LogRegState loginState=gson.fromJson(loginResponseStr, LogRegState.class);
+            ResponseState loginState=gson.fromJson(loginResponseStr, ResponseState.class);
             Toast.makeText(LogActivity.this, loginState.getMsg(), Toast.LENGTH_SHORT).show();
             if(loginState.getCode().equals("200")) {
                 //登录成功，用SharedPreferesbao保存Token值维持登录状态。
@@ -165,7 +163,7 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
             try {
                 String compeletedURL = HttpUtil.getURLWithParams(originAddress, params);
                 //try okhttp3
-                HttpUtil.sendOkHttpRequest(compeletedURL, new okhttp3.Callback() {
+                HttpUtil.sendOkHttpRequestGet(compeletedURL, new okhttp3.Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         //

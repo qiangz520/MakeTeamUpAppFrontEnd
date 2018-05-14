@@ -1,4 +1,4 @@
-package com.example.qiang.maketeamapp;
+package adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.qiang.maketeamapp.KindActivity;
+import com.example.qiang.maketeamapp.R;
 
 import java.util.List;
+
+import bean.Team_kind;
 
 /**
  * Created by qiang on 2018/4/5.

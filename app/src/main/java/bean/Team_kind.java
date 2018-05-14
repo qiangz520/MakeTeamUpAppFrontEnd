@@ -1,4 +1,4 @@
-package com.example.qiang.maketeamapp;
+package bean;
 
 /**
  * Created by qiang on 2018/4/5.

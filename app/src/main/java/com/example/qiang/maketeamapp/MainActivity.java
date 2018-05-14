@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import adapters.KindAdapter;
+import bean.Team_kind;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;  //滑动菜单
@@ -57,34 +60,75 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_house);
         }
         navView.setCheckedItem(R.id.personal_info);
+
+        SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+        final String token=pref.getString("Token","");//获取token
+
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                switch(item.getItemId()){
+
                    case R.id.personal_info:
-                       Intent intent1=new Intent(MainActivity.this, PersonInfo.class);
-                       startActivity(intent1);
+
+                       if(token.equals("")){
+                           Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent);
+                       }
+                       else {
+                           Intent intent1=new Intent(MainActivity.this, PersonInfo.class);
+                           startActivity(intent1);
+                       }
                        break;
                    case R.id.groups:
-                       Intent intent2=new Intent(MainActivity.this, MyTeam.class);
-                       startActivity(intent2);
+                       if(token.equals("")){
+                           Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent);
+                       }
+                       else {
+                           Intent intent2 = new Intent(MainActivity.this, MyTeam.class);
+                           startActivity(intent2);
+                       }
                        break;
                    case R.id.finished:
-                       Intent intent3=new Intent(MainActivity.this,HistoryJoin.class);
-                       startActivity(intent3);
+                       if(token.equals("")){
+                           Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent);
+                       }
+                       else {
+                           Intent intent3 = new Intent(MainActivity.this, HistoryJoin.class);
+                           startActivity(intent3);
+                       }
                        break;
                    case R.id.notifications:
-                       Intent intent4=new Intent(MainActivity.this, SystemMessage.class);
-                       startActivity(intent4);
+                       if(token.equals("")){
+                           Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent);
+                       }
+                       else {
+                           Intent intent4 = new Intent(MainActivity.this, SystemMessage.class);
+                           startActivity(intent4);
+                       }
                        break;
                    case R.id.my_like_:
-                       Intent intent5=new Intent(MainActivity.this, MyLike.class);
-                       startActivity(intent5);
+                       if(token.equals("")){
+                           Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                           startActivity(intent);
+                       }
+                       else {
+                           Intent intent5=new Intent(MainActivity.this, MyLike.class);
+                           startActivity(intent5);
+                       }
                        break;
                    case R.id.user_login:
                        Intent intent6;
-                       SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
-                       String token=pref.getString("Token","");
+//                       SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+//                       String token=pref.getString("Token","");
                        if(token.equals("")) {
                            intent6 = new Intent(MainActivity.this, LogActivity.class);
                            startActivity(intent6);
@@ -104,9 +148,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "添加组队活动", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(MainActivity.this,AddTeam.class);
-                startActivity(intent);
+                SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+                String token=pref.getString("Token","");
+                if(token.equals("")){
+                    Toast.makeText(MainActivity.this,"请先登录！",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, LogActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "添加组队活动", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AddTeam.class);
+                    startActivity(intent);
+                }
             }
         });
         //

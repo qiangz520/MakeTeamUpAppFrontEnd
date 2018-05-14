@@ -1,10 +1,10 @@
-package classes;
+package bean;
 
 /**
  * Created by qiang on 2018/5/10.
  */
 
-public class LogRegState {
+public class ResponseState {
     private String code,msg,Token;
     public String getCode(){
         return code;

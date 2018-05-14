@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qiang.maketeamapp.navActivity.LogActivity;
@@ -23,7 +22,7 @@ import java.util.HashMap;
 
 import HttpTool.HttpUtil;
 import classes.Constant;
-import classes.LogRegState;
+import bean.ResponseState;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -47,7 +46,7 @@ public class RegActivity extends AppCompatActivity {
 //            System.out.println("zengq"+msg.obj.toString());
             regResponseStr=msg.obj.toString();
             Gson gson = new Gson();
-            LogRegState regState=gson.fromJson(regResponseStr, LogRegState.class);
+            ResponseState regState=gson.fromJson(regResponseStr, ResponseState.class);
             Toast.makeText(RegActivity.this, regState.getMsg(), Toast.LENGTH_SHORT).show();
             if(regState.getCode().equals("200")) {
                 Intent intent_reg_success =new Intent(RegActivity.this, LogActivity.class);
@@ -108,7 +107,7 @@ public class RegActivity extends AppCompatActivity {
             try {
                 String compeletedURL = HttpUtil.getURLWithParams(originAddress, params);
                 //try okhttp3
-                HttpUtil.sendOkHttpRequest(compeletedURL, new okhttp3.Callback() {
+                HttpUtil.sendOkHttpRequestGet(compeletedURL, new okhttp3.Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         //
