@@ -62,7 +62,6 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
                 editor=getSharedPreferences("Token",MODE_PRIVATE).edit();
                 editor.putString("Token",loginState.getToken());
                 editor.apply();
-//                System.out.println("Token:"+loginState.getToken() );
                 SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
                 String token=pref.getString("Token","");
                 Log.e("LogActivity:", "Token is: "+token);
@@ -75,8 +74,6 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
                     editor.putBoolean("remember_password",true);
                     editor.putString("account",account);
                     editor.putString("password",password);
-//                    Log.e("Remember", "account:"+account);
-//                    Log.e("Remember","password:"+password);
                 }else{
                     editor.clear();
                 }
@@ -161,9 +158,9 @@ public class LogActivity extends AppCompatActivity implements View.OnClickListen
             params.put("account", edt_log_account.getText().toString());
             params.put("password", edt_log_pwd.getText().toString());
             try {
-                String compeletedURL = HttpUtil.getURLWithParams(originAddress, params);
+                String completedURL = HttpUtil.getURLWithParams(originAddress, params);
                 //try okhttp3
-                HttpUtil.sendOkHttpRequestGet(compeletedURL, new okhttp3.Callback() {
+                HttpUtil.sendOkHttpRequestGet(completedURL, new okhttp3.Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         //

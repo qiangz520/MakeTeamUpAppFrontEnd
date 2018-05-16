@@ -16,7 +16,7 @@ import com.example.qiang.maketeamapp.R;
 
 import java.util.List;
 
-import bean.Team_kind;
+import bean.TeamKind;
 
 /**
  * Created by qiang on 2018/4/5.
@@ -24,7 +24,7 @@ import bean.Team_kind;
 
 public class KindAdapter extends RecyclerView.Adapter <KindAdapter.ViewHolder> {
     private Context mContext;
-    private List<Team_kind> mTeamKindList;
+    private List<TeamKind> mTeamKindList;
     static class ViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
         ImageView kindImage;
@@ -36,7 +36,7 @@ public class KindAdapter extends RecyclerView.Adapter <KindAdapter.ViewHolder> {
             kindName=(TextView)view.findViewById(R.id.kind_name);
         }
     }
-    public KindAdapter(List<Team_kind> kindList){
+    public KindAdapter(List<TeamKind> kindList){
         mTeamKindList=kindList;
     }
 
@@ -51,7 +51,7 @@ public class KindAdapter extends RecyclerView.Adapter <KindAdapter.ViewHolder> {
             @Override
             public void onClick(View v){
                 int position=holder.getAdapterPosition();
-                Team_kind team_kind=mTeamKindList.get(position);
+                TeamKind team_kind=mTeamKindList.get(position);
                 Intent intent=new Intent(mContext,KindActivity.class);
                 intent.putExtra(KindActivity.KIND_NAME,team_kind.getkind_name());
                 intent.putExtra(KindActivity.KIND_IMAGE_ID,team_kind.getImageId());
@@ -64,7 +64,7 @@ public class KindAdapter extends RecyclerView.Adapter <KindAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Team_kind kind=mTeamKindList.get(position);
+        TeamKind kind=mTeamKindList.get(position);
         holder.kindName.setText(kind.getkind_name());
         Glide.with(mContext).load(kind.getImageId()).into(holder.kindImage);
     }

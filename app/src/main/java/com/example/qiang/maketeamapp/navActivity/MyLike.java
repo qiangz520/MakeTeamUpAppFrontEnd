@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.qiang.maketeamapp.R;
-import bean.Team_kind;
+import bean.TeamKind;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 import adapters.LikeKindAdapter;
 
 public class MyLike extends AppCompatActivity {
-    private List<Team_kind> likeList=new ArrayList<>();
+    private List<TeamKind> likeList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +49,17 @@ public class MyLike extends AppCompatActivity {
 
     }
     private void initLikes(){
-        Team_kind studyL = new Team_kind("学习",R.drawable.ic_like_untouched);
+        TeamKind studyL = new TeamKind("学习",R.drawable.ic_like_untouched);
         likeList.add(studyL);
-        Team_kind competitionL = new Team_kind("竞赛",R.drawable.ic_like_untouched);
+        TeamKind competitionL = new TeamKind("竞赛",R.drawable.ic_like_untouched);
         likeList.add(competitionL);
-        Team_kind sportsL = new Team_kind("运动",R.drawable.ic_like_untouched);
+        TeamKind sportsL = new TeamKind("运动",R.drawable.ic_like_untouched);
         likeList.add(sportsL);
-        Team_kind funtimeL = new Team_kind("娱乐",R.drawable.ic_like_untouched);
+        TeamKind funtimeL = new TeamKind("娱乐",R.drawable.ic_like_untouched);
         likeList.add(funtimeL);
-        Team_kind outsidesL = new Team_kind("户外",R.drawable.ic_like_untouched);
+        TeamKind outsidesL = new TeamKind("户外",R.drawable.ic_like_untouched);
         likeList.add(outsidesL);
-        Team_kind groupbookL = new Team_kind("拼团",R.drawable.ic_like_untouched);
+        TeamKind groupbookL = new TeamKind("拼团",R.drawable.ic_like_untouched);
         likeList.add(groupbookL);
     }
 }

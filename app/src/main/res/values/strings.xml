@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">TeamUp</string>
-    <string name="study_content">你可以找一个小哥哥教你高数、找一个计算机大神教你编程、找一个同校考研的研友、找一个人一起做毕业设计…</string>
-    <string name="competition_content">创新学分不够的小伙伴可以来这里组队哟！找一个会喊666的人；找一个擅长演讲的人；找一个数学专业的大神去数学建模…</string>
-    <string name="outsides_content">找个人一起去骑行、爬山、跑马拉松…</string>
-    <string name="sports_content">健身小白可以来这里找一个健身大咖带带你；夏天要来了，也要体测了，有人晚上一起跑步吗；爱打球的小伙伴可以找个球友</string>
-    <string name="groupbook_content">有人一起去……的吗；组团回家了；团购优惠拼个团；找人一起去做社会实践</string>
-    <string name="funtime_content">你可以召集一些小伙伴一起来玩桌游：有人来玩狼人杀吗</string>
+    <string name="study_content">介绍：\n\t你可以找一个小哥哥教你高数；找一个计算机大神教你编程;找一个同校考研的研友、找一个人一起做毕业设计…</string>
+    <string name="competition_content">介绍：\n\t创新学分不够的小伙伴可以来这里组队；做一个会喊666的人；找一个擅长演讲的人；找一个计算机大神；找一个数学专业的大神数学建模…</string>
+    <string name="outsides_content">介绍：\n\t找个人一起去骑行、爬山、跑马拉松…</string>
+    <string name="sports_content">介绍：\n\t健身小白可以来这里找一个健身大咖带带你；找人晚上一起跑步准备体侧；爱打球的小伙伴可以找个球友</string>
+    <string name="groupbook_content">介绍：\n\t组团回家；团购优惠拼个团；找人一起去做社会实践</string>
+    <string name="funtime_content">介绍：\n\t召集一些小伙伴一起来玩桌游,比如狼人杀</string>
     <string name="title_activity_add_team">发布组队活动</string>
     <string name="study">学习</string>
     <string name="competition">竞赛</string>

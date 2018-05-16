@@ -16,5 +16,4 @@ public class TeamInfo implements Serializable {
     private int joinedNumber;
     private int weight;
 
-
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qiang.maketeamapp.R;
-import bean.Team_kind;
+import bean.TeamKind;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class LikeKindAdapter extends RecyclerView.Adapter<LikeKindAdapter.ViewHolder>{
-    private List<Team_kind> mLikeList;
+    private List<TeamKind> mLikeList;
     static class ViewHolder extends RecyclerView.ViewHolder{
         View likeView;
         TextView kindName;
@@ -32,7 +32,7 @@ public class LikeKindAdapter extends RecyclerView.Adapter<LikeKindAdapter.ViewHo
 
     }
 
-    public LikeKindAdapter(List<Team_kind> likeList){
+    public LikeKindAdapter(List<TeamKind> likeList){
         mLikeList=likeList;
     }
 
@@ -44,7 +44,7 @@ public class LikeKindAdapter extends RecyclerView.Adapter<LikeKindAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
-                Team_kind tk=mLikeList.get(position);
+                TeamKind tk=mLikeList.get(position);
                 holder.likeIcon.setImageResource(R.drawable.ic_like_touched);
                 Toast.makeText(v.getContext(),"你关注了"+tk.getkind_name(),Toast.LENGTH_SHORT).show();
             }
@@ -54,7 +54,7 @@ public class LikeKindAdapter extends RecyclerView.Adapter<LikeKindAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Team_kind teamK=mLikeList.get(position);
+        TeamKind teamK=mLikeList.get(position);
         holder.kindName.setText(teamK.getkind_name());
         holder.likeIcon.setImageResource(teamK.getImageId());
     }

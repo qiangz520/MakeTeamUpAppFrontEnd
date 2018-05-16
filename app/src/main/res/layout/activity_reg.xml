@@ -56,7 +56,7 @@
                     android:id="@+id/edt_reg_account"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="账号"
+                    android:hint="请输入手机号"
                     android:textColorHighlight="#77000000"
                     android:textColor="#000000"
                     android:maxLines="1"
@@ -90,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword"
-                    android:hint="密码"
+                    android:hint="请输入密码"
                     android:maxLines="1"
                     android:textSize="15sp"
                     android:textColorHighlight="#77000000"
@@ -139,17 +139,6 @@
             android:background="@color/white"
             android:layout_gravity="center">
 
-            <!--<TextView-->
-                <!--android:id="@+id/find_pwd"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:text="@string/find_pwd"-->
-                <!--android:textColor="@color/blue"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:autoLink="all"-->
-                <!--android:clickable="true"-->
-
-                <!--/>-->
             <Button
                 android:id="@+id/reg_button"
                 android:layout_width="match_parent"

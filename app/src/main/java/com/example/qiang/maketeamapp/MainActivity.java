@@ -3,6 +3,11 @@ package com.example.qiang.maketeamapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,14 +15,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qiang.maketeamapp.navActivity.HistoryJoin;
@@ -27,24 +33,63 @@ import com.example.qiang.maketeamapp.navActivity.MyTeam;
 import com.example.qiang.maketeamapp.navActivity.PersonInfo;
 import com.example.qiang.maketeamapp.navActivity.SystemMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import HttpTool.HttpUtil;
 import adapters.KindAdapter;
-import bean.Team_kind;
+import bean.TeamKind;
+import classes.Constant;
+import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;  //滑动菜单
 
-    private Team_kind[] kinds = {new Team_kind("学习", R.drawable.study),
-            new Team_kind("竞赛", R.drawable.competition), new Team_kind("运动", R.drawable.sports),
-            new Team_kind("户外", R.drawable.outdoors), new Team_kind("娱乐", R.drawable.funtime),
-            new Team_kind("拼团", R.drawable.groupbook)};  //运动分类
+    private TeamKind[] kinds = {new TeamKind("学习", R.drawable.study),
+            new TeamKind("竞赛", R.drawable.competition), new TeamKind("运动", R.drawable.sports),
+            new TeamKind("户外", R.drawable.outdoors), new TeamKind("娱乐", R.drawable.funtime),
+            new TeamKind("拼团", R.drawable.groupbook)};  //运动分类
 
-    private List<Team_kind> kindList = new ArrayList<>();
+    private List<TeamKind> kindList = new ArrayList<>();
     private KindAdapter adapter;
+
+    private TextView tv_NM_header;//头部昵称
+    private TextView tv_CM_header;//头部联系方式
+    private CircleImageView CIW_header;
+
+    Handler mHandler_GetHeaderInfo = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String getHeaderResponseStr = msg.obj.toString();
+            try {
+                JSONObject object=new JSONObject(getHeaderResponseStr);
+                String headerImageStr=object.getString("headImage");
+                String nickNameStr=object.getString("nickName");
+                String contactMethodStr=object.getString("contactMethod");
+                if(headerImageStr.equals("")){
+                    CIW_header.setImageResource(R.drawable.ic_header);
+                }
+                else{
+                    byte[] bytes = Base64.decode(headerImageStr, Base64.DEFAULT);
+                    CIW_header.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                }
+                if(!nickNameStr.equals("未填写"))tv_NM_header.setText(nickNameStr);
+                if(!contactMethodStr.equals("未填写")) tv_CM_header.setText(contactMethodStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);//nav
+
+        SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+        final String token=pref.getString("Token","");//获取token
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -61,12 +110,10 @@ public class MainActivity extends AppCompatActivity {
         }
         navView.setCheckedItem(R.id.personal_info);
 
-        SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
-        final String token=pref.getString("Token","");//获取token
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                switch(item.getItemId()){
 
                    case R.id.personal_info:
@@ -196,6 +243,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+                final String token=pref.getString("Token","");//获取token
+                tv_NM_header=(TextView)findViewById(R.id.header_tv_NM);
+                tv_CM_header=(TextView)findViewById(R.id.header_tv_CM);
+                CIW_header=(CircleImageView)findViewById(R.id.header_CIW);
+                if(!token.equals(""))GetHeaderInfo();///获取该用户的头部信息
                 break;
             case R.id.search:
                // Toast.makeText(this,"You clicked search",Toast.LENGTH_SHORT).show();
@@ -230,5 +283,39 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
         return true;
+    }
+
+    void GetHeaderInfo(){
+        SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
+        final String token=pref.getString("Token","");//获取token
+        if(!token.equals("")) {
+            String originAddress = Constant.URL_GetHeaderInfo;
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("token", token);
+            try {
+                String completedURL = HttpUtil.getURLWithParams(originAddress, params);
+                //try okhttp3
+                HttpUtil.sendOkHttpRequestGet(completedURL, new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        //
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseData = response.body().string();
+//                        Log.e("ResponseData: ",responseData);
+                        Message message = new Message();
+                        message.obj = responseData;
+                        mHandler_GetHeaderInfo.sendMessage(message);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

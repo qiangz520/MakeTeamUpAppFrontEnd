@@ -45,7 +45,7 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class AddTeam extends AppCompatActivity{
+public class AddTeam extends AppCompatActivity {
     private EditText title_et;
     private EditText description_et;
 
@@ -68,18 +68,18 @@ public class AddTeam extends AppCompatActivity{
     private EditText demand_et;
 
     private String issueResponseStr;
-    Handler mHandler_issue = new Handler(){
+    Handler mHandler_issue = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            Log.e("zengq",""+msg.obj.toString());
-            issueResponseStr=msg.obj.toString();
+            Log.e("zengq", "" + msg.obj.toString());
+            issueResponseStr = msg.obj.toString();
             Gson gson = new Gson();
-            ResponseState issueState=gson.fromJson(issueResponseStr, ResponseState.class);
+            ResponseState issueState = gson.fromJson(issueResponseStr, ResponseState.class);
             Toast.makeText(AddTeam.this, issueState.getMsg(), Toast.LENGTH_SHORT).show();
-            if(issueState.getCode().equals("200")) {
-                Intent intent_issue_success =new Intent(AddTeam.this, MainActivity.class);
+            if (issueState.getCode().equals("200")) {
+                Intent intent_issue_success = new Intent(AddTeam.this, MainActivity.class);
                 startActivity(intent_issue_success);
             }
         }
@@ -92,7 +92,7 @@ public class AddTeam extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         //cate_Spinner下拉菜单
@@ -103,16 +103,16 @@ public class AddTeam extends AppCompatActivity{
         categoryList.add("户外");
         categoryList.add("运动");
         categoryList.add("拼团");
-        category_tv = (TextView)findViewById(R.id.team_category);
-        categorySpinner = (Spinner)findViewById(R.id.spinner_category);
+        category_tv = (TextView) findViewById(R.id.team_category);
+        categorySpinner = (Spinner) findViewById(R.id.spinner_category);
         //第二步：为下拉列表定义一个适配器，这里就用到里前面定义的list。
-        adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, categoryList);
+        adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryList);
         //第三步：为适配器设置下拉列表下拉时的菜单样式。
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //第四步：将适配器添加到下拉列表上
         categorySpinner.setAdapter(adapter1);
         //第五步：为下拉列表设置各种事件的响应，这个事响应菜单被选中
-        categorySpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
+        categorySpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 /* 将所选mySpinner 的值带入myTextView 中*/
@@ -120,6 +120,7 @@ public class AddTeam extends AppCompatActivity{
                 /* 将mySpinner 显示*/
                 arg0.setVisibility(View.VISIBLE);
             }
+
             public void onNothingSelected(AdapterView<?> arg0) {
                 // TODO Auto-generated method stub
                 category_tv.setText(null);
@@ -127,7 +128,7 @@ public class AddTeam extends AppCompatActivity{
             }
         });
         /*下拉菜单弹出的内容选项触屏事件处理*/
-       categorySpinner.setOnTouchListener(new Spinner.OnTouchListener(){
+        categorySpinner.setOnTouchListener(new Spinner.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 // TODO Auto-generated method stub
                 /**
@@ -137,7 +138,7 @@ public class AddTeam extends AppCompatActivity{
             }
         });
         /*下拉菜单弹出的内容选项焦点改变事件处理*/
-       categorySpinner.setOnFocusChangeListener(new Spinner.OnFocusChangeListener(){
+        categorySpinner.setOnFocusChangeListener(new Spinner.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 // TODO Auto-generated method stub
 
@@ -145,22 +146,18 @@ public class AddTeam extends AppCompatActivity{
         });
 
         InitView();//find view,Init.
-        date_button.setOnClickListener(new View.OnClickListener()
-        {
+        date_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 /**
                  * 实例化一个DatePickerDialog的对象
                  * 第二个参数是一个DatePickerDialog.OnDateSetListener匿名内部类，当用户选择好日期点击done会调用里面的onDateSet方法
                  */
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTeam.this, new DatePickerDialog.OnDateSetListener()
-                {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTeam.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth)
-                    {
-                        date_text.setText(year + "-" + String.format("%02d",monthOfYear + 1) + "-" + String.format("%02d",dayOfMonth));
+                                          int dayOfMonth) {
+                        date_text.setText(year + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth));
                     }
                 }, year, monthOfYear, dayOfMonth);
 
@@ -168,21 +165,17 @@ public class AddTeam extends AppCompatActivity{
             }
         });
 
-        time_button.setOnClickListener(new View.OnClickListener()
-        {
+        time_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 /**
                  * 实例化一个TimePickerDialog的对象
                  * 第二个参数是一个TimePickerDialog.OnTimeSetListener匿名内部类，当用户选择好时间后点击done会调用里面的onTimeset方法
                  */
-                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTeam.this, new TimePickerDialog.OnTimeSetListener()
-                {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTeam.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                    {
-                        time_text.setText(" " + String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        time_text.setText(" " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
                     }
                 }, hourOfDay, minute, true);
 
@@ -198,7 +191,7 @@ public class AddTeam extends AppCompatActivity{
                         .setIcon(R.drawable.ic_smile)//这里是显示提示框的图片信息，我这里使用的默认androidApp的图标
                         .setTitle("确认发布")
                         .setMessage("您真的要发布吗？")
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -215,10 +208,10 @@ public class AddTeam extends AppCompatActivity{
             }
         });
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -226,15 +219,16 @@ public class AddTeam extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
 
     }
-    private void InitView(){
 
-        title_et =(EditText)findViewById(R.id.team_title_text);
-        description_et =(EditText)findViewById(R.id.team_description_text);
+    private void InitView() {
 
-        date_button = (Button)findViewById(R.id.button1);
-        time_button= (Button)findViewById(R.id.button2);
-        date_text = (TextView)findViewById(R.id.date_text);
-        time_text = (TextView)findViewById(R.id.time_text);
+        title_et = (EditText) findViewById(R.id.team_title_text);
+        description_et = (EditText) findViewById(R.id.team_description_text);
+
+        date_button = (Button) findViewById(R.id.button1);
+        time_button = (Button) findViewById(R.id.button2);
+        date_text = (TextView) findViewById(R.id.date_text);
+        time_text = (TextView) findViewById(R.id.time_text);
 
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -243,49 +237,49 @@ public class AddTeam extends AppCompatActivity{
         hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
 
-        place_et =(EditText)findViewById(R.id.place_text);
-        maxNumer_et =(EditText)findViewById(R.id.team_number_text);
-        demand_et =(EditText)findViewById(R.id.team_demand_text);
+        place_et = (EditText) findViewById(R.id.place_text);
+        maxNumer_et = (EditText) findViewById(R.id.team_number_text);
+        demand_et = (EditText) findViewById(R.id.team_demand_text);
     }
 
-    private void IssueTeamInfo(){
-        SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
-        String token=pref.getString("Token","");//获取token
+    private void IssueTeamInfo() {
+        SharedPreferences pref = getSharedPreferences("Token", MODE_PRIVATE);
+        String token = pref.getString("Token", "");//获取token
 
-        String title= title_et.getText().toString();
-        String description= description_et.getText().toString();
-        String category=categorySpinner.getSelectedItem().toString();
-        String  date=date_text.getText().toString();
-        String  time=time_text.getText().toString();
-        String date_time=date+time; //活动时间
+        String title = title_et.getText().toString();
+        String description = description_et.getText().toString();
+        String category = categorySpinner.getSelectedItem().toString();
+        String date = date_text.getText().toString();
+        String time = time_text.getText().toString();
+        String date_time = date + time; //活动时间
 
-        Date cDate=new Date();
+        Date cDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String currentTime= sdf.format(cDate);;//生成当前时间
-        Log.e("currentTime ",""+currentTime);
+        String currentTime = sdf.format(cDate);
+        ;//生成当前时间
+        Log.e("currentTime ", "" + currentTime);
 
-        String  place= place_et.getText().toString();
-        String  number= maxNumer_et.getText().toString();
-        String  demand= demand_et.getText().toString();
-        if(title.equals("")||description.equals("")||category.equals("")||date.equals("")||time.equals("")||place.equals("")||number.equals("")||demand.equals("")){
-            Toast.makeText(AddTeam.this,"请完善组队信息！",Toast.LENGTH_SHORT).show();
-        }
-        else{
+        String place = place_et.getText().toString();
+        String number = maxNumer_et.getText().toString();
+        String demand = demand_et.getText().toString();
+        if (title.equals("") || description.equals("") || category.equals("") || date.equals("") || time.equals("") || place.equals("") || number.equals("") || demand.equals("")) {
+            Toast.makeText(AddTeam.this, "请完善组队信息！", Toast.LENGTH_SHORT).show();
+        } else {
             String compeletedURL = Constant.URL_AddTeam;
-            RequestBody requestBody=new FormBody.Builder()
-                .add("token",token)
-                .add("title", title)
-                .add("description", description)
-                .add("category",category)
-                .add("datetime",date_time)
-                .add("currentTime",currentTime)
-                .add("place",place)
-                .add("number",number)
-                .add("demand",demand)
-                .build();
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("token", token)
+                    .add("title", title)
+                    .add("description", description)
+                    .add("category", category)
+                    .add("datetime", date_time)
+                    .add("currentTime", currentTime)
+                    .add("place", place)
+                    .add("number", number)
+                    .add("demand", demand)
+                    .build();
             try {
                 //try okhttp3
-                HttpUtil.sendOkHttpRequestPost(compeletedURL,requestBody, new okhttp3.Callback() {
+                HttpUtil.sendOkHttpRequestPost(compeletedURL, requestBody, new okhttp3.Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         //
@@ -296,7 +290,7 @@ public class AddTeam extends AppCompatActivity{
                     public void onResponse(Call call, Response response) throws IOException {
 //                        返回发布结果
                         String responseData = response.body().string();
-                        Log.e("onResponse: ",responseData);
+                        Log.e("onResponse: ", responseData);
                         Message message = new Message();
                         message.obj = responseData;
                         mHandler_issue.sendMessage(message);

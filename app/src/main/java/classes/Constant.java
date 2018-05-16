@@ -5,9 +5,12 @@ package classes;
  */
 
 public class Constant {
-    public static String URL = "http://172.25.253.1:8080/"; // IP地址请改为你自己的IP，不能用localhost,而要使用本地局域网ip。通过cmd,ipconfig/all查看。
+    public static String URL = "http://172.19.104.1:8080/"; // IP地址请改为你自己的IP，不能用localhost,而要使用本地局域网ip。通过cmd,ipconfig/all查看。
 
     public static String URL_Register = URL + "register";
     public static String URL_Login = URL + "login";
     public static String URL_AddTeam = URL + "addTeam";
+    public static String URL_InitPersonInfo = URL+"InitPersonInfo";
+    public static String URL_GetHeaderInfo= URL+"GetHeaderInfo";
+
 }
