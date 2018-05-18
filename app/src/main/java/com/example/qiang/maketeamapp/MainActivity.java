@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,27 +33,34 @@ import com.example.qiang.maketeamapp.navActivity.MyLike;
 import com.example.qiang.maketeamapp.navActivity.MyTeam;
 import com.example.qiang.maketeamapp.navActivity.PersonInfo;
 import com.example.qiang.maketeamapp.navActivity.SystemMessage;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import HttpTool.HttpUtil;
 import adapters.KindAdapter;
+import bean.ResponseState;
 import bean.TeamKind;
 import classes.Constant;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static classes.Constant.URL_UpdateData;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;  //滑动菜单
+    private SwipeRefreshLayout swipeRefresh;//下拉刷新控件
 
     private TeamKind[] kinds = {new TeamKind("学习", R.drawable.study),
             new TeamKind("竞赛", R.drawable.competition), new TeamKind("运动", R.drawable.sports),
@@ -65,31 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv_NM_header;//头部昵称
     private TextView tv_CM_header;//头部联系方式
     private CircleImageView CIW_header;
-
-    Handler mHandler_GetHeaderInfo = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String getHeaderResponseStr = msg.obj.toString();
-            try {
-                JSONObject object=new JSONObject(getHeaderResponseStr);
-                String headerImageStr=object.getString("headImage");
-                String nickNameStr=object.getString("nickName");
-                String contactMethodStr=object.getString("contactMethod");
-                if(headerImageStr.equals("")){
-                    CIW_header.setImageResource(R.drawable.ic_header);
-                }
-                else{
-                    byte[] bytes = Base64.decode(headerImageStr, Base64.DEFAULT);
-                    CIW_header.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                }
-                if(!nickNameStr.equals("未填写"))tv_NM_header.setText(nickNameStr);
-                if(!contactMethodStr.equals("未填写")) tv_CM_header.setText(contactMethodStr);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +91,8 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_house);
         }
+
         navView.setCheckedItem(R.id.personal_info);
-
-
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -174,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
                        break;
                    case R.id.user_login:
                        Intent intent6;
-//                       SharedPreferences pref  = getSharedPreferences("Token",MODE_PRIVATE);
-//                       String token=pref.getString("Token","");
                        if(token.equals("")) {
                            intent6 = new Intent(MainActivity.this, LogActivity.class);
                            startActivity(intent6);
@@ -190,6 +170,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+//        下拉刷新逻辑
+        swipeRefresh=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                UpdateData();
+            }
+        });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);//悬浮按钮
         fab.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +296,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String responseData = response.body().string();
-//                        Log.e("ResponseData: ",responseData);
                         Message message = new Message();
                         message.obj = responseData;
                         mHandler_GetHeaderInfo.sendMessage(message);
@@ -318,4 +308,87 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    Handler mHandler_GetHeaderInfo = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String getHeaderResponseStr = msg.obj.toString();
+            try {
+                JSONObject object=new JSONObject(getHeaderResponseStr);
+                String headerImageStr=object.getString("headImage");
+                String nickNameStr=object.getString("nickName");
+                String contactMethodStr=object.getString("contactMethod");
+                if(headerImageStr.equals("")){
+                    CIW_header.setImageResource(R.drawable.ic_header);
+                }
+                else{
+                    byte[] bytes = Base64.decode(headerImageStr, Base64.DEFAULT);
+                    CIW_header.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                }
+                if(!nickNameStr.equals("未填写"))tv_NM_header.setText(nickNameStr);
+                if(!contactMethodStr.equals("未填写")) tv_CM_header.setText(contactMethodStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+//    提交一个当前时间到服务器，与活动的进行时间进行比较，请求将过期的活动的有效字段更新为无效。
+    private void UpdateData(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String Update="1";
+                        String originAddress = URL_UpdateData;
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put("update",Update);
+//                     向服务器发送Http更新请求
+                        try {
+                            String completedURL = HttpUtil.getURLWithParams(originAddress, params);
+                            //try okhttp3
+                            HttpUtil.sendOkHttpRequestGet(completedURL, new okhttp3.Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    //
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    String responseData = response.body().string();
+                                    Message message = new Message();
+                                    message.obj = responseData;
+                                    mHandler_UpdateData.sendMessage(message);
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    Handler mHandler_UpdateData = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String updateResponseStr=msg.obj.toString();
+            Gson gson = new Gson();
+            ResponseState updateState=gson.fromJson(updateResponseStr, ResponseState.class);
+            Toast.makeText(MainActivity.this,updateState.getMsg(),Toast.LENGTH_SHORT).show();
+            swipeRefresh.setRefreshing(false);
+        }
+    };
+
 }

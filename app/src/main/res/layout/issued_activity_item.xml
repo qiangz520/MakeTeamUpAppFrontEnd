@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/who_issued_activity"
+            android:text="Breeze 在2018-05-17 16:23:00 发布了 学习类 活动"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="15dp">
+        </LinearLayout>
+        <TextView
+            android:id="@+id/issued_activity_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="标题:星期五晚上跑步求组队"/>
+        <TextView
+            android:id="@+id/issued_activity_description"
+            android:text="描述:西北田径场跑步"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/issued_activity_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="地点:西北田径场"/>
+        <TextView
+            android:id="@+id/issued_activity_demand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="要求:女生"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/issued_activity_time"
+            android:text="时间:2018-05-17 16:32:00"
+            />
+        <TextView
+            android:id="@+id/activity_contactMethod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="联系方式:1357977299"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="15dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/activity_number_message"
+                android:text="共需人数: 8人\n已有人数: 7人"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <Button
+                    android:id="@+id/join_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="立即参与"
+                    android:minHeight="2dp"
+                    android:minWidth="2dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/blue"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

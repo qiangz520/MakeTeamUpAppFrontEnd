@@ -2,6 +2,7 @@ package bean;
 
 /**
  * Created by qiang on 2018/5/10.
+ * 解析服务端Response返回JSON字符串使用的类
  */
 
 public class ResponseState {

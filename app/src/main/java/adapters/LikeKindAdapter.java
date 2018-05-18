@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by qiang on 2018/5/9.
+ * 作为"我的关注"里的RecyclerView的喜欢类型的适配器
  */
 
 public class LikeKindAdapter extends RecyclerView.Adapter<LikeKindAdapter.ViewHolder>{

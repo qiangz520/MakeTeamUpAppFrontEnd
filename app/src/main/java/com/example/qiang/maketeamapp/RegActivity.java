@@ -34,26 +34,10 @@ public class RegActivity extends AppCompatActivity {
     private EditText edtPassword;
     private EditText edtRepeatPassword;
     private Button buttonReg;
-    private String regResponseStr;
     final private int IS_VOID=3;//输入不全
     final private int NOT_SAME=2;//两次不一致
     final private int VALID_INPUT=1;//有效输入
-    Handler mHandler_log = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
 
-//            System.out.println("zengq"+msg.obj.toString());
-            regResponseStr=msg.obj.toString();
-            Gson gson = new Gson();
-            ResponseState regState=gson.fromJson(regResponseStr, ResponseState.class);
-            Toast.makeText(RegActivity.this, regState.getMsg(), Toast.LENGTH_SHORT).show();
-            if(regState.getCode().equals("200")) {
-                Intent intent_reg_success =new Intent(RegActivity.this, LogActivity.class);
-                startActivity(intent_reg_success);
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +89,9 @@ public class RegActivity extends AppCompatActivity {
             params.put("account", edtAccount.getText().toString());
             params.put("password", edtPassword.getText().toString());
             try {
-                String compeletedURL = HttpUtil.getURLWithParams(originAddress, params);
+                String completedURL = HttpUtil.getURLWithParams(originAddress, params);
                 //try okhttp3
-                HttpUtil.sendOkHttpRequestGet(compeletedURL, new okhttp3.Callback() {
+                HttpUtil.sendOkHttpRequestGet(completedURL, new okhttp3.Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         //
@@ -127,6 +111,21 @@ public class RegActivity extends AppCompatActivity {
             }
         }
     }
+
+    Handler mHandler_log = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String regResponseStr = msg.obj.toString();
+            Gson gson = new Gson();
+            ResponseState regState=gson.fromJson(regResponseStr, ResponseState.class);
+            Toast.makeText(RegActivity.this, regState.getMsg(), Toast.LENGTH_SHORT).show();
+            if(regState.getCode().equals("200")) {
+                Intent intent_reg_success =new Intent(RegActivity.this, LogActivity.class);
+                startActivity(intent_reg_success);
+            }
+        }
+    };
 
     private int InputValidValue() {
         //检查用户输入的合法性，这里暂且默认用户输入合法

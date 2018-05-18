@@ -64,26 +64,8 @@ public class AddTeam extends AppCompatActivity {
     private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
     private EditText place_et;
-    private EditText maxNumer_et;
+    private EditText maxNumber_et;
     private EditText demand_et;
-
-    private String issueResponseStr;
-    Handler mHandler_issue = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            Log.e("zengq", "" + msg.obj.toString());
-            issueResponseStr = msg.obj.toString();
-            Gson gson = new Gson();
-            ResponseState issueState = gson.fromJson(issueResponseStr, ResponseState.class);
-            Toast.makeText(AddTeam.this, issueState.getMsg(), Toast.LENGTH_SHORT).show();
-            if (issueState.getCode().equals("200")) {
-                Intent intent_issue_success = new Intent(AddTeam.this, MainActivity.class);
-                startActivity(intent_issue_success);
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,7 +220,7 @@ public class AddTeam extends AppCompatActivity {
         minute = calendar.get(Calendar.MINUTE);
 
         place_et = (EditText) findViewById(R.id.place_text);
-        maxNumer_et = (EditText) findViewById(R.id.team_number_text);
+        maxNumber_et = (EditText) findViewById(R.id.team_number_text);
         demand_et = (EditText) findViewById(R.id.team_demand_text);
     }
 
@@ -260,7 +242,7 @@ public class AddTeam extends AppCompatActivity {
         Log.e("currentTime ", "" + currentTime);
 
         String place = place_et.getText().toString();
-        String number = maxNumer_et.getText().toString();
+        String number = maxNumber_et.getText().toString();
         String demand = demand_et.getText().toString();
         if (title.equals("") || description.equals("") || category.equals("") || date.equals("") || time.equals("") || place.equals("") || number.equals("") || demand.equals("")) {
             Toast.makeText(AddTeam.this, "请完善组队信息！", Toast.LENGTH_SHORT).show();
@@ -300,8 +282,23 @@ public class AddTeam extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
     }
+
+    Handler mHandler_issue = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            Log.e("zengq", "" + msg.obj.toString());
+            String issueResponseStr = msg.obj.toString();
+            Gson gson = new Gson();
+            ResponseState issueState = gson.fromJson(issueResponseStr, ResponseState.class);
+            Toast.makeText(AddTeam.this, issueState.getMsg(), Toast.LENGTH_SHORT).show();
+            if (issueState.getCode().equals("200")) {
+                Intent intent_issue_success = new Intent(AddTeam.this, MainActivity.class);
+                startActivity(intent_issue_success);
+            }
+        }
+    };
 }

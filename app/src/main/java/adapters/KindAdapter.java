@@ -20,6 +20,7 @@ import bean.TeamKind;
 
 /**
  * Created by qiang on 2018/4/5.
+ * 点击某一类组队活动时，查看
  */
 
 public class KindAdapter extends RecyclerView.Adapter <KindAdapter.ViewHolder> {

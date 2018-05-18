@@ -2,6 +2,7 @@ package bean;
 
 /**
  * Created by qiang on 2018/4/5.
+ * 主界面的活动分类，包括图片和活动名称
  */
 
 public class TeamKind {
