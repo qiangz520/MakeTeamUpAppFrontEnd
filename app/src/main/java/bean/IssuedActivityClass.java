@@ -7,6 +7,7 @@ package bean;
 
 public class IssuedActivityClass {
     private String who_issue;
+    private String activityID;
     private String title;
     private String description;
     private String place;
@@ -14,6 +15,14 @@ public class IssuedActivityClass {
     private String startTime;
     private String contactMethod;
     private String joinMessage;
+
+    public String getActivityID() {
+        return activityID;
+    }
+
+    public void setActivityID(String activityID) {
+        this.activityID = activityID;
+    }
 
     public String getWho_issue() {
         return who_issue;

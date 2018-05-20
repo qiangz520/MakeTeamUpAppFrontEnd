@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class TeamInfo implements Serializable {
     private static final long serialVersionUID = 1L;
+    private int activityID;
     private String  issuerNickName;
     private String title;
     private String description;
@@ -16,8 +17,9 @@ public class TeamInfo implements Serializable {
     private int joinedNumber;
     private int weight;
 
-    public TeamInfo(String issuerNickName, String title, String description, String issueTime,
+    public TeamInfo(int activityID, String issuerNickName, String title, String description, String issueTime,
                     String startTime, String place, String demand, String contactMethod, int maxNumber, int joinedNumber) {
+        this.activityID = activityID;
         this.issuerNickName = issuerNickName;
         this.title = title;
         this.description = description;
@@ -110,5 +112,13 @@ public class TeamInfo implements Serializable {
 
     public void setContactMethod(String contactMethod) {
         this.contactMethod = contactMethod;
+    }
+
+    public int getActivityID() {
+        return activityID;
+    }
+
+    public void setActivityID(int activityID) {
+        this.activityID = activityID;
     }
 }

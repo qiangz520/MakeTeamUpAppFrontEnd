@@ -1,16 +1,15 @@
 package com.example.qiang.maketeamapp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import java.util.List;
 import HttpTool.HttpUtil;
 import adapters.IssuedActivityAdapter;
 import bean.IssuedActivityClass;
-import bean.ResponseState;
 import bean.TeamInfo;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -104,7 +102,7 @@ public class KindActivity extends AppCompatActivity {
         params.put("kindName",kindName);
         try {
             String completedURL=HttpUtil.getURLWithParams(originAddress,params);
-            Log.e("zengq",completedURL );
+//            Log.e("zengq",completedURL );
             HttpUtil.sendOkHttpRequestGet(completedURL, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -129,27 +127,33 @@ public class KindActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String activityInfoResponseStr=msg.obj.toString();
-            Log.e("zengq",activityInfoResponseStr );
-            Gson gson = new Gson();
-            List<TeamInfo> teamInfoList=gson.fromJson(activityInfoResponseStr,new TypeToken<List<TeamInfo>>(){}.getType());
-            issuedActivityList.clear();
-            for(TeamInfo teamInfo:teamInfoList){
-                IssuedActivityClass activityClass=new IssuedActivityClass();
-                activityClass.setWho_issue(teamInfo.getIssuerNickName()+" 在"+teamInfo.getIssueTime()+" 发布了 "+kindName+"类 活动");
-                activityClass.setTitle("标题:"+teamInfo.getTitle());
-                activityClass.setDescription("描述:"+teamInfo.getDescription());
-                activityClass.setPlace("地点:"+teamInfo.getPlace());
-                activityClass.setDemand("要求:"+teamInfo.getDemand());
-                activityClass.setStartTime("时间:"+teamInfo.getStartTime());
-                activityClass.setContactMethod("联系方式:"+teamInfo.getContactMethod());
-                activityClass.setJoinMessage("共需人数:"+teamInfo.getMaxNumber()+"人\n已有人数:"+teamInfo.getJoinedNumber()+"人");
-                issuedActivityList.add(activityClass);
+//            Log.e("zengq",activityInfoResponseStr );
+            if(activityInfoResponseStr.equals("]"))
+                Toast.makeText(KindActivity.this,"该分类下暂无组队活动！",Toast.LENGTH_SHORT).show();
+            else {
+                Gson gson = new Gson();
+                List<TeamInfo> teamInfoList = gson.fromJson(activityInfoResponseStr, new TypeToken<List<TeamInfo>>() {
+                }.getType());
+                issuedActivityList.clear();
+                for (TeamInfo teamInfo : teamInfoList) {
+                    IssuedActivityClass activityClass = new IssuedActivityClass();
+                    activityClass.setWho_issue(teamInfo.getIssuerNickName() + " 在" + teamInfo.getIssueTime() + " 发布了 " + kindName + "类 活动");
+                    activityClass.setActivityID(String.valueOf(teamInfo.getActivityID()));
+                    activityClass.setTitle("标题:" + teamInfo.getTitle());
+                    activityClass.setDescription("描述:" + teamInfo.getDescription());
+                    activityClass.setPlace("地点:" + teamInfo.getPlace());
+                    activityClass.setDemand("要求:" + teamInfo.getDemand());
+                    activityClass.setStartTime("时间:" + teamInfo.getStartTime());
+                    activityClass.setContactMethod("联系方式:" + teamInfo.getContactMethod());
+                    activityClass.setJoinMessage("共需人数:" + teamInfo.getMaxNumber() + "人\n已有人数:" + teamInfo.getJoinedNumber() + "人");
+                    issuedActivityList.add(activityClass);
+                }
+                recyclerView_activity_this_kind = (RecyclerView) findViewById(R.id.recyclerView_all_activity);
+                recyclerView_activity_this_kind.setLayoutManager(layoutManager);
+                activityAdapter = new IssuedActivityAdapter(issuedActivityList);
+                recyclerView_activity_this_kind.setAdapter(activityAdapter);
             }
-            recyclerView_activity_this_kind=(RecyclerView)findViewById(R.id.recyclerView_all_activity);
-            recyclerView_activity_this_kind.setLayoutManager(layoutManager);
-            activityAdapter=new IssuedActivityAdapter(issuedActivityList);
-            recyclerView_activity_this_kind.setAdapter(activityAdapter);
-            Log.e("zenq,ListCount",""+issuedActivityList.size() );
+//            Log.e("zenq,ListCount",""+issuedActivityList.size() );
         }
     };
 }
