@@ -28,7 +28,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+
+import com.baidu.aip.contentcensor.AipContentCensor;
+import com.baidu.aip.imagecensor.AipImageCensor;
 import com.google.gson.Gson;
+
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -36,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import HttpTool.HttpUtil;
 import bean.ResponseState;
@@ -44,6 +52,10 @@ import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static classes.AipConstant.API_KEY;
+import static classes.AipConstant.APP_ID;
+import static classes.AipConstant.SECRET_KEY;
 
 public class AddTeam extends AppCompatActivity {
     private EditText title_et;
@@ -180,11 +192,7 @@ public class AddTeam extends AppCompatActivity {
 
                                 Snackbar.make(view, "正在发布", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
-
-
                                 IssueTeamInfo();
-//                                Intent intent_issue_finished=new Intent(AddTeam.this, MainActivity.class);
-//                                startActivity(intent_issue_finished);
                             }
                         }).show();
             }
@@ -239,7 +247,6 @@ public class AddTeam extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String currentTime = sdf.format(cDate);
         ;//生成当前时间
-        Log.e("currentTime ", "" + currentTime);
 
         String place = place_et.getText().toString();
         String number = maxNumber_et.getText().toString();
@@ -247,41 +254,56 @@ public class AddTeam extends AppCompatActivity {
         if (title.equals("") || description.equals("") || category.equals("") || date.equals("") || time.equals("") || place.equals("") || number.equals("") || demand.equals("")) {
             Toast.makeText(AddTeam.this, "请完善组队信息！", Toast.LENGTH_SHORT).show();
         } else {
-            String compeletedURL = Constant.URL_AddTeam;
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("token", token)
-                    .add("title", title)
-                    .add("description", description)
-                    .add("category", category)
-                    .add("datetime", date_time)
-                    .add("currentTime", currentTime)
-                    .add("place", place)
-                    .add("number", number)
-                    .add("demand", demand)
-                    .build();
-            try {
-                //try okhttp3
-                HttpUtil.sendOkHttpRequestPost(compeletedURL, requestBody, new okhttp3.Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        //
-                        Log.e("zengq:", "Failure");
-                    }
+//            AipContentCensor client = new AipContentCensor(APP_ID, API_KEY, SECRET_KEY);
+//            String toCheckStr=title+description+place+demand;
+//            // 可选：设置网络连接参数
+//            JSONObject response = client.antiSpam(toCheckStr, null);
+//            System.out.println(response.toString());
+//            ArrayList<String> itemsList=getRe(response.toString(),"\"spam\":\"^((-\\d+)|(0+))$\"");
+//            String spamStr="";
+//            for(int i=0;i<itemsList.size();i++){
+//                spamStr=itemsList.get(i);
+//            }
+//            int spam=Integer.parseInt(spamStr);
+//            Log.e("IssueTeamInfo spam= ",spam+"" );
+//            if(spam==1||spam==2){
+//                Toast.makeText(AddTeam.this,"发布的信息中存在违禁内容，请重新编辑！",Toast.LENGTH_SHORT).show();
+//            }else {
+                String compeletedURL = Constant.URL_AddTeam;
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("token", token)
+                        .add("title", title)
+                        .add("description", description)
+                        .add("category", category)
+                        .add("datetime", date_time)
+                        .add("currentTime", currentTime)
+                        .add("place", place)
+                        .add("number", number)
+                        .add("demand", demand)
+                        .build();
+                try {
+                    HttpUtil.sendOkHttpRequestPost(compeletedURL, requestBody, new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            //
+                            Log.e("zengq:", "Failure");
+                        }
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-//                        返回发布结果
-                        String responseData = response.body().string();
-                        Log.e("onResponse: ", responseData);
-                        Message message = new Message();
-                        message.obj = responseData;
-                        mHandler_issue.sendMessage(message);
-                    }
-                });
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            //                        返回发布结果
+                            String responseData = response.body().string();
+                            Log.e("onResponse: ", responseData);
+                            Message message = new Message();
+                            message.obj = responseData;
+                            mHandler_issue.sendMessage(message);
+                        }
+                    });
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//            }
         }
     }
 
@@ -301,4 +323,19 @@ public class AddTeam extends AppCompatActivity {
             }
         }
     };
+
+    //根据正则表达式语法匹配(仅仅输出匹配结果)--两者区别见主函数
+    private static ArrayList<String> getRe(String text, String patterString){
+        ArrayList<String> l= new ArrayList<>();
+        Pattern pattern = Pattern.compile(patterString);
+        Matcher m = pattern.matcher(text);
+        while (m.find()) {
+            for(int i=1;i<m.groupCount()+1;i++)
+            {
+                l.add(m.group(i));
+            }
+        }
+        return l;
+    }
 }
+

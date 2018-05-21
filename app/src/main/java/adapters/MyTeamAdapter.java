@@ -1,8 +1,11 @@
 package adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,12 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.qiang.maketeamapp.MainActivity;
+import com.example.qiang.maketeamapp.AddTeam;
 import com.example.qiang.maketeamapp.R;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import HttpTool.HttpUtil;
@@ -32,14 +34,13 @@ import okhttp3.Response;
 import static classes.Constant.URL_UpdateData;
 
 /**
- * Created by qiang on 2018/5/17.
- * 在分类详情页中的RecycleView中作为已发布活动的适配器
+ * Created by qiang on 2018/5/21.
  */
 
-public class IssuedActivityAdapter extends RecyclerView.Adapter<IssuedActivityAdapter.ViewHolder>{
+public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.ViewHolder>{
     private List<IssuedActivityClass> issuedActivityList;
     private Context mContext;
-    private Handler mHandler_UpdateData;
+//    private Handler mHandler_delete;
     static class ViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
         TextView tv_who_issue;
@@ -65,11 +66,11 @@ public class IssuedActivityAdapter extends RecyclerView.Adapter<IssuedActivityAd
             tv_activity_time=(TextView)itemView.findViewById(R.id.issued_activity_time);
             tv_contact_method=(TextView)itemView.findViewById(R.id.activity_contactMethod);
             tv_number_message=(TextView)itemView.findViewById(R.id.activity_number_message);
-            button_join=(Button)itemView.findViewById(R.id.join_button);
+            button_join=(Button)itemView.findViewById(R.id.join_button);//改为删除操作按钮
         }
     }
 
-    public IssuedActivityAdapter(List<IssuedActivityClass> issuedActivityList) {
+    public MyTeamAdapter(List<IssuedActivityClass> issuedActivityList) {
         this.issuedActivityList = issuedActivityList;
     }
 
@@ -80,59 +81,50 @@ public class IssuedActivityAdapter extends RecyclerView.Adapter<IssuedActivityAd
         }
         View view= LayoutInflater.from(mContext).inflate(R.layout.issued_activity_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
+        holder.button_join.setText("点击删除");
         holder.button_join.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(final View v) {
-                int position = holder.getAdapterPosition();
-                IssuedActivityClass activityClass=issuedActivityList.get(position);
-                String Update;
-                String activityID=activityClass.getActivityID();
-                final String Add="2";   //增加参与人数请求
-                final String Minus="3";//取消参与
+                new AlertDialog.Builder(v.getContext())
+                        .setIcon(R.drawable.ic_smile)//这里是显示提示框的图片信息，我这里使用的默认androidApp的图标
+                        .setTitle("删除发布")
+                        .setMessage("您确定要删除吗？")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                holder.button_join.setText("已删除");
+                                int position = holder.getAdapterPosition();
+                                IssuedActivityClass activityClass=issuedActivityList.get(position);
+                                String Update;
+                                String activityID=activityClass.getActivityID();
+                                final String Delete="4";//删除活动
+                                Update=Delete;
+                                String originAddress=URL_UpdateData;
+                                RequestBody requestBody=new FormBody.Builder()
+                                        .add("activityID",activityID)
+                                        .add("update",Update)
+                                        .build();
+                                try {
+                                    HttpUtil.sendOkHttpRequestPost(originAddress,requestBody, new Callback() {
+                                        @Override
+                                        public void onFailure(Call call, IOException e) {
 
-                if(holder.button_join.getText().toString().equals("立即参与")) {
-                    Update=Add;
-                }
-                else {
-                    Update=Minus;
-                }
+                                        }
 
-                String originAddress=URL_UpdateData;
-                RequestBody requestBody=new FormBody.Builder()
-                        .add("activityID",activityID)
-                        .add("update",Update)
-                        .build();
-                try {
-                    HttpUtil.sendOkHttpRequestPost(originAddress,requestBody, new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
+                                        @Override
+                                        public void onResponse(Call call, Response response) throws IOException {
 
-                        }
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).show();
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String responseData = response.body().string();
-                            Message message = new Message();
-                            message.obj = responseData;
-                            mHandler_UpdateData.sendMessage(message);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mHandler_UpdateData = new Handler(){
-                    @Override
-                    public void handleMessage(Message msg) {
-                        super.handleMessage(msg);
-                        String updateResponseStr=msg.obj.toString();
-                        Gson gson = new Gson();
-                        ResponseState updateState=gson.fromJson(updateResponseStr, ResponseState.class);
-                        if(updateState.getMsg().equals("参与成功！"))holder.button_join.setText("取消参与");
-                        if(updateState.getMsg().equals("你已经取消参与了！")) holder.button_join.setText("立即参与");
-                        Toast.makeText(v.getContext(),updateState.getMsg(),Toast.LENGTH_SHORT).show();
-                    }
-                };
+
             }
         });
         return holder;
@@ -155,7 +147,5 @@ public class IssuedActivityAdapter extends RecyclerView.Adapter<IssuedActivityAd
     public int getItemCount() {
         return issuedActivityList.size();
     }
-
-
 
 }
