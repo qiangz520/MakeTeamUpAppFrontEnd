@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,7 +31,6 @@ import android.widget.Toast;
 
 
 import com.baidu.aip.contentcensor.AipContentCensor;
-import com.baidu.aip.imagecensor.AipImageCensor;
 import com.google.gson.Gson;
 
 
@@ -189,10 +189,9 @@ public class AddTeam extends AppCompatActivity {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                new Thread(runnable).start();
                                 Snackbar.make(view, "正在发布", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
-                                IssueTeamInfo();
                             }
                         }).show();
             }
@@ -252,23 +251,24 @@ public class AddTeam extends AppCompatActivity {
         String number = maxNumber_et.getText().toString();
         String demand = demand_et.getText().toString();
         if (title.equals("") || description.equals("") || category.equals("") || date.equals("") || time.equals("") || place.equals("") || number.equals("") || demand.equals("")) {
+            Looper.prepare();
             Toast.makeText(AddTeam.this, "请完善组队信息！", Toast.LENGTH_SHORT).show();
+            Looper.loop();
         } else {
-//            AipContentCensor client = new AipContentCensor(APP_ID, API_KEY, SECRET_KEY);
-//            String toCheckStr=title+description+place+demand;
-//            // 可选：设置网络连接参数
-//            JSONObject response = client.antiSpam(toCheckStr, null);
-//            System.out.println(response.toString());
-//            ArrayList<String> itemsList=getRe(response.toString(),"\"spam\":\"^((-\\d+)|(0+))$\"");
-//            String spamStr="";
-//            for(int i=0;i<itemsList.size();i++){
-//                spamStr=itemsList.get(i);
-//            }
-//            int spam=Integer.parseInt(spamStr);
-//            Log.e("IssueTeamInfo spam= ",spam+"" );
-//            if(spam==1||spam==2){
-//                Toast.makeText(AddTeam.this,"发布的信息中存在违禁内容，请重新编辑！",Toast.LENGTH_SHORT).show();
-//            }else {
+            AipContentCensor client = new AipContentCensor(APP_ID, API_KEY, SECRET_KEY);
+            String toCheckStr=title+description+place+demand;
+            // 可选：设置网络连接参数
+            JSONObject response = client.antiSpam(toCheckStr, null);
+            System.out.println(response.toString());
+            String responseStr=response.toString();
+            int indexSpam=responseStr.indexOf("\"spam\":");
+            char spamvalueStr=responseStr.charAt(indexSpam+7);
+            int spam=Integer.parseInt(String.valueOf(spamvalueStr));
+            if(spam==1||spam==2){
+                Looper.prepare();
+                Toast.makeText(AddTeam.this,"发布的信息中存在违禁内容，请重新编辑！",Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }else {
                 String compeletedURL = Constant.URL_AddTeam;
                 RequestBody requestBody = new FormBody.Builder()
                         .add("token", token)
@@ -285,15 +285,13 @@ public class AddTeam extends AppCompatActivity {
                     HttpUtil.sendOkHttpRequestPost(compeletedURL, requestBody, new okhttp3.Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            //
-                            Log.e("zengq:", "Failure");
+                            Log.e("zengq", "Failure");
                         }
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             //                        返回发布结果
                             String responseData = response.body().string();
-                            Log.e("onResponse: ", responseData);
                             Message message = new Message();
                             message.obj = responseData;
                             mHandler_issue.sendMessage(message);
@@ -303,7 +301,7 @@ public class AddTeam extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//            }
+            }
         }
     }
 
@@ -324,18 +322,11 @@ public class AddTeam extends AppCompatActivity {
         }
     };
 
-    //根据正则表达式语法匹配(仅仅输出匹配结果)--两者区别见主函数
-    private static ArrayList<String> getRe(String text, String patterString){
-        ArrayList<String> l= new ArrayList<>();
-        Pattern pattern = Pattern.compile(patterString);
-        Matcher m = pattern.matcher(text);
-        while (m.find()) {
-            for(int i=1;i<m.groupCount()+1;i++)
-            {
-                l.add(m.group(i));
-            }
+    private Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            IssueTeamInfo();
         }
-        return l;
-    }
+    };
 }
 

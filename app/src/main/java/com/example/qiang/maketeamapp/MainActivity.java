@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent_interest);
                 break;
             case R.id.settings:
-                Toast.makeText(this,"You clicked settings",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Welcome to TeamUp!",Toast.LENGTH_SHORT).show();
                 break;
             default:
         }

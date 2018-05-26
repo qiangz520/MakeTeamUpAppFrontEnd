@@ -40,7 +40,7 @@ import static classes.Constant.URL_UpdateData;
 public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.ViewHolder>{
     private List<IssuedActivityClass> issuedActivityList;
     private Context mContext;
-//    private Handler mHandler_delete;
+    private Handler mHandler_Delete;
     static class ViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
         TextView tv_who_issue;
@@ -94,7 +94,7 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.ViewHolder
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                holder.button_join.setText("已删除");
+//                                holder.button_join.setText("已删除");
                                 int position = holder.getAdapterPosition();
                                 IssuedActivityClass activityClass=issuedActivityList.get(position);
                                 String Update;
@@ -115,12 +115,27 @@ public class MyTeamAdapter extends RecyclerView.Adapter<MyTeamAdapter.ViewHolder
 
                                         @Override
                                         public void onResponse(Call call, Response response) throws IOException {
-
+                                            String responseData = response.body().string();
+                                            Message message = new Message();
+                                            message.obj = responseData;
+                                            mHandler_Delete.sendMessage(message);
                                         }
                                     });
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                mHandler_Delete = new Handler(){
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        super.handleMessage(msg);
+                                        String deleteResponseStr=msg.obj.toString();
+                                        Gson gson = new Gson();
+                                        ResponseState deleteState=gson.fromJson(deleteResponseStr, ResponseState.class);
+                                        if(deleteState.getMsg().equals("删除成功！"))holder.button_join.setText("已删除");
+                                        Toast.makeText(v.getContext(),deleteState.getMsg(),Toast.LENGTH_SHORT).show();
+                                    }
+                                };
+
                             }
                         }).show();
 
